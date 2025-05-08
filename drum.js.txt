@@ -1,0 +1,101 @@
+const { useEffect, useState } = React;
+
+const bank = [
+  {
+    key: 'Q',
+    name: 'Heater-1',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3',
+  },
+  {
+    key: 'W',
+    name: 'Heater-2',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3',
+  },
+  {
+    key: 'E',
+    name: 'Heater-3',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3',
+  },
+  {
+    key: 'A',
+    name: 'Heater-4',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3',
+  },
+  {
+    key: 'S',
+    name: 'Clap',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3',
+  },
+  {
+    key: 'D',
+    name: 'Open-HH',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3',
+  },
+  {
+    key: 'Z',
+    name: \"Kick-n'-Hat\",
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3',
+  },
+  {
+    key: 'X',
+    name: 'Kick',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3',
+  },
+  {
+    key: 'C',
+    name: 'Closed-HH',
+    url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3',
+  },
+];
+
+function DrumPad({ keyTrigger, name, url, onPlay }) {
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key.toUpperCase() === keyTrigger) {
+        document.getElementById(keyTrigger).play();
+        onPlay(name);
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, []);
+
+  const handleClick = () => {
+    document.getElementById(keyTrigger).play();
+    onPlay(name);
+  };
+
+  return (
+    <button className=\"drum-pad\" id={name} onClick={handleClick}>
+      {keyTrigger}
+      <audio className=\"clip\" id={keyTrigger} src={url}></audio>
+    </button>
+  );
+}
+
+function App() {
+  const [display, setDisplay] = useState('Hit a Pad');
+
+  const handleDisplay = (sound) => {
+    setDisplay(sound);
+  };
+
+  return (
+    <div id=\"drum-machine\">
+      <div id=\"display\">{display}</div>
+      <div className=\"pad-bank\">
+        {bank.map((pad) => (
+          <DrumPad
+            key={pad.key}
+            keyTrigger={pad.key}
+            name={pad.name}
+            url={pad.url}
+            onPlay={handleDisplay}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
